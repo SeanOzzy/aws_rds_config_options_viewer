@@ -17,6 +17,9 @@ The AWS RDS Configuration Options Viewer is a Python-based GUI tool designed to 
 - **Clear Cache**: Ability to clear cache for the selected region with just a click.
 - **GUI Interface**: A user-friendly GUI to simplify interactions.
 
+#### Example main application screenshot
+![Main application Window](examples/screenshots/main_application_ss_v1.PNG)
+
 ### Demo video for v1.0
 https://github.com/SeanOzzy/aws_rds_config_options_viewer/docs/demo-v1.0.mp4
 
