@@ -24,9 +24,9 @@ https://github.com/SeanOzzy/aws_rds_config_options_viewer/assets/114792501/8fd96
 ### Usage
 
 1. **Run the Application**:
-   \```sh
+   ```sh
    python rdsConfigViewer.py
-   \```
+   ```
 
 2. **Select a Region**: Upon starting the application, a prompt will appear to select a desired AWS region. The first time you select a region the application needs to fetch the supported DB engines and DB instance types which will be populated to the cache. DB engines and instance types are relatively static so the default cache retention is 7 days, this can be customised in config/constants.py as required. Typically fetching the data initially takes 2-4 minutes.
 
@@ -67,7 +67,7 @@ https://github.com/SeanOzzy/aws_rds_config_options_viewer/assets/114792501/8fd96
 
 ## Contribute
 
-Contributions, issues, and feature requests are welcome! Feel free to check the [Issues](https://github.com/yourusername/aws-rds-configuration-options/issues) page.
+Contributions, issues, and feature requests are welcome! Feel free to check the [Issues](https://github.com/SeanOzzy/aws_rds_config_options_viewer/issues) page.
 
 ## License
 
