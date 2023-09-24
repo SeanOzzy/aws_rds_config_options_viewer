@@ -18,8 +18,8 @@ The AWS RDS Configuration Options Viewer is a Python-based GUI tool designed to 
 - **GUI Interface**: A user-friendly GUI to simplify interactions.
 
 ### Demo video for v1.0
-https://github.com/SeanOzzy/aws_rds_config_options_viewer/docs/demo-v1.0.mp4
 
+https://github.com/SeanOzzy/aws_rds_config_options_viewer/assets/114792501/9b9ff631-b166-4656-91a3-47a0af0d608d
 
 ### Usage
 
