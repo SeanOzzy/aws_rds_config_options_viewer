@@ -71,4 +71,7 @@ Contributions, issues, and feature requests are welcome! Feel free to check the 
 
 ## License
 
-This software is provided under a Fair Use license. No warranties or liabilities are accepted. For detailed licensing information, refer to the [LICENSE](LICENSE) file.
+This software is provided under the MIT license. No warranties or liabilities are accepted. For detailed licensing information, refer to the [LICENSE](LICENSE) file.
+
+## Disclaimer
+Amazon Web Services do not endorse, warrant or accept any liability for using this package. This is a personal portfolio project shared with the aim to assist AWS RDS users and to continue my Python learning journey.
