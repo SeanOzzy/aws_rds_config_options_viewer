@@ -21,15 +21,15 @@ The AWS RDS Configuration Options Viewer is a Python-based GUI tool designed to 
 ![Main application Window](examples/screenshots/main_application_ss_v1.PNG)
 
 ### Demo video for v1.0
-https://github.com/SeanOzzy/aws_rds_config_options_viewer/docs/demo-v1.0.mp4
 
+https://github.com/SeanOzzy/aws_rds_config_options_viewer/assets/114792501/8fd960f1-185d-4736-a8a9-394387bbdbd3
 
 ### Usage
 
 1. **Run the Application**:
-   \```sh
+   ```sh
    python rdsConfigViewer.py
-   \```
+   ```
 
 2. **Select a Region**: Upon starting the application, a prompt will appear to select a desired AWS region. The first time you select a region the application needs to fetch the supported DB engines and DB instance types which will be populated to the cache. DB engines and instance types are relatively static so the default cache retention is 7 days, this can be customised in config/constants.py as required. Typically fetching the data initially takes 2-4 minutes.
 
@@ -70,8 +70,11 @@ https://github.com/SeanOzzy/aws_rds_config_options_viewer/docs/demo-v1.0.mp4
 
 ## Contribute
 
-Contributions, issues, and feature requests are welcome! Feel free to check the [Issues](https://github.com/yourusername/aws-rds-configuration-options/issues) page.
+Contributions, issues, and feature requests are welcome! Feel free to check the [Issues](https://github.com/SeanOzzy/aws_rds_config_options_viewer/issues) page.
 
 ## License
 
-This software is provided under a Fair Use license. No warranties or liabilities are accepted. For detailed licensing information, refer to the [LICENSE](LICENSE) file.
+This software is provided under the MIT license. No warranties or liabilities are accepted. For detailed licensing information, refer to the [LICENSE](LICENSE) file.
+
+## Disclaimer
+Amazon Web Services do not endorse, warrant or accept any liability for using this package. This is a personal portfolio project shared with the aim to assist AWS RDS users and to continue my Python learning journey.
