@@ -43,7 +43,15 @@ https://github.com/SeanOzzy/aws_rds_config_options_viewer/assets/114792501/8fd96
 
 ## Installation & Requirements
 
-1. Clone the repository or download the zip package.
+### Requirements
+
+1. Python 3.10.x or higher. For further information see:
+    a. [Using Python on a Mac](https://docs.python.org/3/using/mac.html)
+    b. [Using Python on Windows](https://docs.python.org/3/using/windows.html)
+2. Valid credentials with permissions to access the AWS RDS service. For information on configuring credentials see the [AWS Boto3 credentials documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html)
+
+### Installing the application
+1. Clone the repository or download and unpack the zip package.
 2. Navigate to the root directory of the application.
 3. Install the required Python packages using:
     ```bash
@@ -58,7 +66,7 @@ https://github.com/SeanOzzy/aws_rds_config_options_viewer/assets/114792501/8fd96
 
 - **config**: Contains configuration files.
     - `constants.py`: Holds various constants and configurations. Customize AWS regions, cache settings, and more here.
-    - `rds_endpoints.py`: Endpoint details for different AWS regions.
+    - `rds_endpoints.py`: Endpoint details for the AWS regions. 
 - **gui**: Contains files related to the graphical user interface.
     - `widgets.py`: Defines individual widgets and components of the GUI.
 - **utils**: Utility scripts and helper functions.
@@ -78,3 +86,13 @@ This software is provided under the MIT license. No warranties or liabilities ar
 
 ## Disclaimer
 Amazon Web Services do not endorse, warrant or accept any liability for using this package. This is a personal portfolio project shared with the aim to assist AWS RDS users and to continue my Python learning journey.
+
+## Acknowledgements
+This application depends on the AWS Boto3 API's [describe_db_engine_versions](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/describe_db_engine_versions.html) and [describe_orderable_db_instance_options]https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/describe_orderable_db_instance_options.html).
+
+## FAQ
+1.  I see security token invalid errors.
+    Check that your AWS credentails are configured correctly and that you have access to the region you selected. If you wish to identify RDS regions accessible for your account you can obtain a list via the [describe_source_regions](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/describe_source_regions.html) API.
+
+2.  I don't see the expected database engines in the Database Engine list dropdown.
+    You likely the credentials you are passing when running the application do not have permission to launch the DB engine you are missing, the engine list and db instance class list are created programatically by fetching the options available for the account, region and credentials you are using.

@@ -21,8 +21,8 @@ def requirement_precheck():
     try:
         print(f"INFO: Running requirement precheck, please wait...")
         client = boto3.client('rds', region_name=AWS_TEST_REGION)
-        # This is a lightweight API call to check if we have valid credentials
-        client.describe_db_engine_versions(MaxRecords=20)
+        # This is a lightweight API call to check if we have valid credentials and access to the RDS API via boto3
+        client.describe_source_regions(MaxRecords=20)
         logger.info("AWS API access verified.")
         # print("AWS API access verified.")
     except Exception as e:

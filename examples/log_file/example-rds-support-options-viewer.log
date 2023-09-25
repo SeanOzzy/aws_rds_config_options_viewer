@@ -1,0 +1,136 @@
+2023-09-25 10:58:10,725 - INFO - AWS API access verified.
+2023-09-25 10:58:10,726 - INFO - All requirements satisfied.
+2023-09-25 10:58:14,038 - WARNING - Cached data expired or not found, populating cache for all supported RDS engines in us-east-1
+2023-09-25 10:58:14,038 - INFO - HINT: This may take a few minutes depending on the number of supported engines in the region...
+2023-09-25 10:58:28,299 - WARNING - Cached data expired or not found, populating DB instance classes for ['aurora-mysql', 'aurora-postgresql', 'mariadb', 'mysql', 'postgres', 'sqlserver-ee', 'sqlserver-ex', 'sqlserver-se', 'sqlserver-web'] in region us-east-1
+2023-09-25 10:58:28,301 - INFO - HINT: This may take a few minutes depending on the number of supported instances in the region...
+2023-09-25 11:02:07,485 - INFO - INFO: DB Instance Class Search completed in: 0:03:39.185554 (format HH:MM:SS.MS))
+2023-09-25 11:02:07,487 - INFO - Found 177 supported DB instance classes in region us-east-1 for ['aurora-mysql', 'aurora-postgresql', 'mariadb', 'mysql', 'postgres', 'sqlserver-ee', 'sqlserver-ex', 'sqlserver-se', 'sqlserver-web'] 
+
+2023-09-25 11:08:27,350 - INFO - Executing API call with the following options:
+2023-09-25 11:08:27,350 - INFO - Region: us-east-1
+2023-09-25 11:08:27,350 - INFO - Engine: postgres
+2023-09-25 11:08:27,351 - INFO - DBInstanceClass: db.m4.large
+2023-09-25 11:08:27,351 - INFO - MultiAZCapable: 0
+2023-09-25 11:08:27,351 - INFO - SupportsClusters: 0
+2023-09-25 11:08:27,351 - INFO - SupportsPerformanceInsights: 0
+2023-09-25 11:08:27,351 - INFO - SupportsEnhancedMonitoring: 0
+2023-09-25 11:08:27,351 - INFO - SupportsStorageEncryption: 0
+2023-09-25 11:08:27,351 - INFO - SupportsIAMDatabaseAuthentication: 0
+2023-09-25 11:08:27,351 - INFO - SupportsKerberosAuthentication: 0
+2023-09-25 11:08:27,351 - INFO - SupportsGlobalDatabases: 0
+2023-09-25 11:08:27,352 - INFO - GP2 Storage: 0
+2023-09-25 11:08:27,352 - INFO - GP3 Storage: 0
+2023-09-25 11:08:27,352 - INFO - IO1 Storage: 0
+2023-09-25 11:08:27,352 - INFO - Magnetic Storage: 0
+2023-09-25 11:08:27,352 - DEBUG - JMESPath query: OrderableDBInstanceOptions[] 
+
+2023-09-25 11:08:39,671 - INFO - Executing API call with the following options:
+2023-09-25 11:08:39,672 - INFO - Region: us-east-1
+2023-09-25 11:08:39,672 - INFO - Engine: postgres
+2023-09-25 11:08:39,672 - INFO - DBInstanceClass: db.m4.large
+2023-09-25 11:08:39,672 - INFO - MultiAZCapable: 1
+2023-09-25 11:08:39,673 - INFO - SupportsClusters: 0
+2023-09-25 11:08:39,673 - INFO - SupportsPerformanceInsights: 0
+2023-09-25 11:08:39,673 - INFO - SupportsEnhancedMonitoring: 0
+2023-09-25 11:08:39,673 - INFO - SupportsStorageEncryption: 0
+2023-09-25 11:08:39,673 - INFO - SupportsIAMDatabaseAuthentication: 0
+2023-09-25 11:08:39,673 - INFO - SupportsKerberosAuthentication: 0
+2023-09-25 11:08:39,673 - INFO - SupportsGlobalDatabases: 0
+2023-09-25 11:08:39,673 - INFO - GP2 Storage: 0
+2023-09-25 11:08:39,673 - INFO - GP3 Storage: 1
+2023-09-25 11:08:39,673 - INFO - IO1 Storage: 0
+2023-09-25 11:08:39,673 - INFO - Magnetic Storage: 0
+2023-09-25 11:08:39,673 - DEBUG - JMESPath query: OrderableDBInstanceOptions[?MultiAZCapable == `true` && StorageType == `gp3`] 
+
+2023-09-25 11:09:08,688 - INFO - Executing API call with the following options:
+2023-09-25 11:09:08,688 - INFO - Region: us-east-1
+2023-09-25 11:09:08,688 - INFO - Engine: postgres
+2023-09-25 11:09:08,688 - INFO - DBInstanceClass: db.r6gd.large
+2023-09-25 11:09:08,688 - INFO - MultiAZCapable: 0
+2023-09-25 11:09:08,688 - INFO - SupportsClusters: 1
+2023-09-25 11:09:08,688 - INFO - SupportsPerformanceInsights: 0
+2023-09-25 11:09:08,688 - INFO - SupportsEnhancedMonitoring: 0
+2023-09-25 11:09:08,688 - INFO - SupportsStorageEncryption: 0
+2023-09-25 11:09:08,688 - INFO - SupportsIAMDatabaseAuthentication: 0
+2023-09-25 11:09:08,688 - INFO - SupportsKerberosAuthentication: 0
+2023-09-25 11:09:08,688 - INFO - SupportsGlobalDatabases: 0
+2023-09-25 11:09:08,688 - INFO - GP2 Storage: 0
+2023-09-25 11:09:08,688 - INFO - GP3 Storage: 0
+2023-09-25 11:09:08,688 - INFO - IO1 Storage: 1
+2023-09-25 11:09:08,688 - INFO - Magnetic Storage: 0
+2023-09-25 11:09:08,688 - DEBUG - JMESPath query: OrderableDBInstanceOptions[?SupportsClusters == `true` && StorageType == `io1`] 
+
+2023-09-25 11:09:32,509 - INFO - Executing API call with the following options:
+2023-09-25 11:09:32,509 - INFO - Region: us-east-1
+2023-09-25 11:09:32,509 - INFO - Engine: aurora-postgresql
+2023-09-25 11:09:32,509 - INFO - DBInstanceClass: db.r6gd.large
+2023-09-25 11:09:32,509 - INFO - MultiAZCapable: 0
+2023-09-25 11:09:32,509 - INFO - SupportsClusters: 0
+2023-09-25 11:09:32,509 - INFO - SupportsPerformanceInsights: 0
+2023-09-25 11:09:32,509 - INFO - SupportsEnhancedMonitoring: 0
+2023-09-25 11:09:32,509 - INFO - SupportsStorageEncryption: 0
+2023-09-25 11:09:32,509 - INFO - SupportsIAMDatabaseAuthentication: 0
+2023-09-25 11:09:32,509 - INFO - SupportsKerberosAuthentication: 0
+2023-09-25 11:09:32,509 - INFO - SupportsGlobalDatabases: 0
+2023-09-25 11:09:32,509 - INFO - GP2 Storage: 1
+2023-09-25 11:09:32,509 - INFO - GP3 Storage: 0
+2023-09-25 11:09:32,509 - INFO - IO1 Storage: 0
+2023-09-25 11:09:32,509 - INFO - Magnetic Storage: 0
+2023-09-25 11:09:32,509 - DEBUG - JMESPath query: OrderableDBInstanceOptions[?StorageType == `gp2`] 
+
+2023-09-25 11:09:45,877 - INFO - Executing API call with the following options:
+2023-09-25 11:09:45,877 - INFO - Region: us-east-1
+2023-09-25 11:09:45,877 - INFO - Engine: aurora-postgresql
+2023-09-25 11:09:45,877 - INFO - DBInstanceClass: db.r5.2xlarge
+2023-09-25 11:09:45,877 - INFO - MultiAZCapable: 0
+2023-09-25 11:09:45,877 - INFO - SupportsClusters: 0
+2023-09-25 11:09:45,877 - INFO - SupportsPerformanceInsights: 0
+2023-09-25 11:09:45,877 - INFO - SupportsEnhancedMonitoring: 0
+2023-09-25 11:09:45,877 - INFO - SupportsStorageEncryption: 0
+2023-09-25 11:09:45,877 - INFO - SupportsIAMDatabaseAuthentication: 0
+2023-09-25 11:09:45,877 - INFO - SupportsKerberosAuthentication: 0
+2023-09-25 11:09:45,877 - INFO - SupportsGlobalDatabases: 0
+2023-09-25 11:09:45,878 - INFO - GP2 Storage: 1
+2023-09-25 11:09:45,878 - INFO - GP3 Storage: 0
+2023-09-25 11:09:45,878 - INFO - IO1 Storage: 0
+2023-09-25 11:09:45,878 - INFO - Magnetic Storage: 0
+2023-09-25 11:09:45,878 - DEBUG - JMESPath query: OrderableDBInstanceOptions[?StorageType == `gp2`] 
+
+2023-09-25 11:09:49,201 - INFO - Executing API call with the following options:
+2023-09-25 11:09:49,202 - INFO - Region: us-east-1
+2023-09-25 11:09:49,202 - INFO - Engine: aurora-postgresql
+2023-09-25 11:09:49,202 - INFO - DBInstanceClass: db.r5.2xlarge
+2023-09-25 11:09:49,202 - INFO - MultiAZCapable: 0
+2023-09-25 11:09:49,202 - INFO - SupportsClusters: 0
+2023-09-25 11:09:49,202 - INFO - SupportsPerformanceInsights: 0
+2023-09-25 11:09:49,202 - INFO - SupportsEnhancedMonitoring: 0
+2023-09-25 11:09:49,202 - INFO - SupportsStorageEncryption: 0
+2023-09-25 11:09:49,202 - INFO - SupportsIAMDatabaseAuthentication: 0
+2023-09-25 11:09:49,202 - INFO - SupportsKerberosAuthentication: 0
+2023-09-25 11:09:49,202 - INFO - SupportsGlobalDatabases: 0
+2023-09-25 11:09:49,202 - INFO - GP2 Storage: 0
+2023-09-25 11:09:49,202 - INFO - GP3 Storage: 0
+2023-09-25 11:09:49,202 - INFO - IO1 Storage: 0
+2023-09-25 11:09:49,202 - INFO - Magnetic Storage: 0
+2023-09-25 11:09:49,203 - DEBUG - JMESPath query: OrderableDBInstanceOptions[] 
+
+2023-09-25 11:10:04,250 - INFO - Executing API call with the following options:
+2023-09-25 11:10:04,250 - INFO - Region: us-east-1
+2023-09-25 11:10:04,250 - INFO - Engine: aurora-postgresql
+2023-09-25 11:10:04,250 - INFO - EngineVersion: 14.8
+2023-09-25 11:10:04,250 - INFO - DBInstanceClass: db.r5.2xlarge
+2023-09-25 11:10:04,250 - INFO - MultiAZCapable: 0
+2023-09-25 11:10:04,250 - INFO - SupportsClusters: 0
+2023-09-25 11:10:04,250 - INFO - SupportsPerformanceInsights: 0
+2023-09-25 11:10:04,250 - INFO - SupportsEnhancedMonitoring: 0
+2023-09-25 11:10:04,250 - INFO - SupportsStorageEncryption: 0
+2023-09-25 11:10:04,250 - INFO - SupportsIAMDatabaseAuthentication: 0
+2023-09-25 11:10:04,250 - INFO - SupportsKerberosAuthentication: 0
+2023-09-25 11:10:04,251 - INFO - SupportsGlobalDatabases: 0
+2023-09-25 11:10:04,251 - INFO - GP2 Storage: 0
+2023-09-25 11:10:04,251 - INFO - GP3 Storage: 0
+2023-09-25 11:10:04,251 - INFO - IO1 Storage: 0
+2023-09-25 11:10:04,251 - INFO - Magnetic Storage: 0
+2023-09-25 11:10:04,251 - DEBUG - JMESPath query: OrderableDBInstanceOptions[?EngineVersion == '14.8'] 
+
