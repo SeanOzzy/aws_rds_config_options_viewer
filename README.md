@@ -18,11 +18,14 @@ The AWS RDS Configuration Options Viewer is a Python-based GUI tool designed to 
 - **GUI Interface**: A user-friendly GUI to simplify interactions.
 
 #### Example main application screenshot
-![Main application Window](examples/screenshots/main_application_ss_v1.PNG)
+![Main application on Windows](examples/screenshots/main_application_ss_v1.PNG)
+
+![Main application on macOS](examples/screenshots/macos_main_application_ss_v1.png)
 
 ### Demo video for v1.0
 
 https://github.com/SeanOzzy/aws_rds_config_options_viewer/assets/114792501/8fd960f1-185d-4736-a8a9-394387bbdbd3
+**Note**: This video contains no audio by design.
 
 ### Usage
 
@@ -53,11 +56,27 @@ https://github.com/SeanOzzy/aws_rds_config_options_viewer/assets/114792501/8fd96
 ### Installing the application
 1. Clone the repository or download and unpack the zip package.
 2. Navigate to the root directory of the application.
-3. Install the required Python packages using:
+3. Configure a Python virtual environment to keep the required packages from cluttering your system.
+    - **macOS**
+    For macOS you need to install tkinter with Tcl/Tk via ```brew install python-tk@3.10```, see [Idle and tkinter on macOS](https://www.python.org/download/mac/tcltk/).
+    ```bash
+    pip install virtualenv
+    python -m venv /path/to/new/virtual/aws_rds_config_options_viewer
+    /path/to/aws_rds_config_options_viewer/bin activate
+    ```
+
+    - **Windows**
+    ```bash
+    pip install virtualenv
+    python -m venv c:\path\to\aws_rds_config_options_viewer
+    cd c:\path\to\aws_rds_config_options_viewer
+    Scripts\activate
+    ```
+4. Install the required Python packages using:
     ```bash
     pip install -r requirements.txt
     ```
-4. Run the application using:
+5. Run the application using:
     ```bash
     python rdsConfigViewer.py
     ```
@@ -88,7 +107,7 @@ This software is provided under the MIT license. No warranties or liabilities ar
 Amazon Web Services do not endorse, warrant or accept any liability for using this package. This is a personal portfolio project shared with the aim to assist AWS RDS users and to continue my Python learning journey.
 
 ## Acknowledgements
-This application depends on the AWS Boto3 API's [describe_db_engine_versions](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/describe_db_engine_versions.html) and [describe_orderable_db_instance_options]https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/describe_orderable_db_instance_options.html).
+This application depends on the AWS Boto3 API's [describe_db_engine_versions](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/describe_db_engine_versions.html) and [describe_orderable_db_instance_options](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/describe_orderable_db_instance_options.html).
 
 ## FAQ
 1.  I see security token invalid errors.
