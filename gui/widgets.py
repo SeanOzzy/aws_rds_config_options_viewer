@@ -7,9 +7,6 @@ def populate_dropdowns(main_window, engines, db_classes):
     main_window.engine_dropdown['values'] = engines
     main_window.db_class_dropdown['values'] = db_classes
 
-""" def fetch_and_display_func(engine_entry, db_instance_class_entry, result_tree, **kwargs):
-    data_processing.fetch_and_display(engine_entry, db_instance_class_entry, result_tree, **kwargs) """
-
 # Add a function to allow disabling checkboxes when the selection of multiple checkboxes is invalid
 def toggle_checkboxes(checked_var, checked_checkbox, *checkboxes):
     if checked_var.get():  # If the checkbox was checked
@@ -19,14 +16,26 @@ def toggle_checkboxes(checked_var, checked_checkbox, *checkboxes):
         for checkbox in checkboxes:
             checkbox.configure(state="normal")
 
-# def toggle_checkboxes(checked_checkbox, *checkboxes):
-#     if checked_checkbox.get():  # If the checkbox was checked
-#         for checkbox in checkboxes:
-#             checkbox.configure(state="disabled")
-#         checked_checkbox.configure(state="normal")
-#     else:  # If the checkbox was unchecked
-#         for checkbox in checkboxes:
-#             checkbox.configure(state="normal")
+# Add a function to help break down the long list of db instance types into a dictionary of classes and types
+def categorize_instance_classes(data_list):
+    categorized_data = {}
+    for instance in data_list:
+        parts = instance.split('.')
+        class_name = f"{parts[0]}.{parts[1]}"
+        type_name = '.'.join(parts[2:])
+        if class_name not in categorized_data:
+            categorized_data[class_name] = []
+        categorized_data[class_name].append(type_name)
+    return categorized_data
+
+# Add a function to update the DB instance type combobox when the DB instance class is selected
+def on_class_selected(event, categorized_data, db_instance_class_entry, db_instance_type_entry):
+    selected_class = db_instance_class_entry.get()
+    if selected_class in categorized_data:
+        db_instance_type_entry['values'] = categorized_data[selected_class]
+    else:
+        db_instance_type_entry['values'] = []
+    db_instance_type_entry.set('')  # Reset the combobox value
 
 
 # Define a function to initialize the main GUI window
@@ -76,19 +85,42 @@ def initialize_gui(fetch_and_display_func):
     db_instance_class_label.grid_columnconfigure(1, weight=1)
     db_instance_class_label.grid_rowconfigure(1, weight=1)
 
+    db_instance_type_label = tk.Label(main_window, text="Select DB Instance Type (required)")
+    db_instance_type_label.grid(column=0, row=3, columnspan=3, padx=1, pady=1)
+    db_instance_type_label.grid_columnconfigure(1, weight=1)
+    db_instance_type_label.grid_rowconfigure(1, weight=1)
+
 # Call the function to generate the list of supported DB instance classes
     db_instance_class_options = aws_api.get_supported_db_classes(engine_options)
-    db_instance_class_entry = ttk.Combobox(main_window, values=db_instance_class_options)
+    # Call the function to categorize the DB instance classes into a dictionary
+    categorized_instance_classes_data = categorize_instance_classes(db_instance_class_options)
+    # Create a combobox to display the DB instance classes
+    db_instance_class_list = list(categorized_instance_classes_data.keys())
+    # Insert the class list into the combobox
+    db_instance_class_entry = ttk.Combobox(main_window, values=db_instance_class_list)
     db_instance_class_entry.grid(column=1, row=2, columnspan=3, padx=1, pady=1)
     db_instance_class_entry.grid_columnconfigure(1, weight=1)
     db_instance_class_entry.grid_rowconfigure(1, weight=1)
 
+    # Create a combobox to display the DB instance types
+    db_instance_type_entry = ttk.Combobox(main_window)
+    db_instance_type_entry.grid(column=1, row=3, columnspan=3, padx=1, pady=1)
+    db_instance_type_entry.grid_columnconfigure(1, weight=1)
+    db_instance_type_entry.grid_rowconfigure(1, weight=1)
+
+    # When the user selects the db class from the combobox, update the db instance type combobox
+    # With this we can give the user a shorter list of instance types based on the instance class they select
+    # Eg: If the user selects db.t3, then we can show only the t3 instance types in the instance type combobox
+    db_instance_class_entry.bind("<<ComboboxSelected>>", 
+                                 lambda event, data=categorized_instance_classes_data, class_entry=db_instance_class_entry, type_entry=db_instance_type_entry: on_class_selected(event, data, class_entry, type_entry))
+
+
     db_engine_version_label = tk.Label(main_window, text="Enter DB Engine Version (optional)")
-    db_engine_version_label.grid(column=0, row=3, columnspan=3, padx=1, pady=1)
+    db_engine_version_label.grid(column=0, row=4, columnspan=3, padx=1, pady=1)
     db_engine_version_label.grid_columnconfigure(1, weight=1)
     db_engine_version_label.grid_rowconfigure(1, weight=1)
     db_engine_version_entry = ttk.Entry(main_window)
-    db_engine_version_entry.grid(column=1, row=3, columnspan=3, padx=1, pady=1)
+    db_engine_version_entry.grid(column=1, row=4, columnspan=3, padx=1, pady=1)
     db_engine_version_entry.grid_columnconfigure(1, weight=1)
     db_engine_version_entry.grid_rowconfigure(1, weight=1)
     # ... (repeat the above lines for other input fields)
@@ -188,7 +220,9 @@ def initialize_gui(fetch_and_display_func):
         text="Execute", 
         command=lambda: fetch_and_display_func(
             engine_entry, 
-            db_instance_class_entry, 
+            # We need to join the DB instance class and type together to get the full name of the DB instance class.
+            # db.serverless is a special case since this class does not have a type, so we hack this in the fetch_and_display() in data_processing.py
+            db_instance_class_entry.get() + "." + db_instance_type_entry.get(), 
             result_tree,
             db_engine_version_entry,
             multi_az_var = multi_az_var,

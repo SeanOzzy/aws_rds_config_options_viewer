@@ -108,16 +108,23 @@ def process_api_response(response, query):
     return api_results
   
 # Define a function to fetch and display the results when the execute button is clicked
-def fetch_and_display(engine_entry, db_instance_class_entry, result_tree, db_engine_version_entry, **kwargs):
+# def fetch_and_display(engine_entry, db_instance_class_entry, result_tree, db_engine_version_entry, **kwargs):
+def fetch_and_display(engine_entry, db_instance_class, result_tree, db_engine_version_entry, **kwargs):
     global api_results
     client = boto3.client('rds', region_name=os.environ.get("RDS_REGION"))
     # Get the user inputs
     engine = engine_entry.get()
-    db_instance_class = db_instance_class_entry.get()
+    # db_instance_class = db_instance_class_entry.get()
+    db_instance_class = db_instance_class
+    # This is a hack to support db.serverless as this class does not support the db.class.type format eg. db.t3.micro
+    if db_instance_class == "db.serverless.":
+        db_instance_class = "db.serverless"
+    else:
+        db_instance_class = db_instance_class
     if db_engine_version_entry:
         db_engine_version_entry = db_engine_version_entry.get()
     
-    # Call the boto3 API
+    # Call the boto3 API to get the supported orderables for the engine and instance class
     try:
         # print(f"DEBUG: boto3 client in fetch_and_display function: {region_name}")
         response = client.describe_orderable_db_instance_options(
