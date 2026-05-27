@@ -35,5 +35,29 @@ The ```data_processing.py``` module deals with processing API responses and pres
 
 **Description**: The module is focused on constructing JMESPath queries based on user preferences and extracting desired details from AWS API responses.
 **Key Functions**:
-    - **construct_jmespath_query**: Constructs a JMESPath query based on various checkboxes' states. The function allows users to filter RDS instances based on features like MultiAZ capability, support for clusters, performance insights, enhanced monitoring, storage encryption, IAM authentication, and more. It dynamically constructs the query string based on selected checkboxes. This utility provides a fine-grained filtering mechanism for users to narrow down their RDS instance choices based on multiple criteria. The use of JMESPath is efficient for extracting specific details from complex JSON responses.
+    - **construct_jmespath_query**: Constructs a JMESPath query based on various checkboxes' states. The function allows users to filter RDS instances based on features like MultiAZ capability, support for clusters, performance insights, enhanced monitoring, storage encryption, IAM authentication, Dedicated Log Volume, IPv6/Dual-Stack networking, Babelfish, storage autoscaling, AWS Outposts, and storage types (gp2, gp3, io1, io2, magnetic). It dynamically constructs the query string based on selected checkboxes. This utility provides a fine-grained filtering mechanism for users to narrow down their RDS instance choices based on multiple criteria. The use of JMESPath is efficient for extracting specific details from complex JSON responses.
+    - **process_api_response**: Extracts result columns from the filtered API response. Columns include Engine, EngineVersion, DBInstanceClass, StorageType, MaxIopsPerDbInstance, MinStorageSize, MaxStorageSize, MaxStorageThroughputPerDbInstance, SupportsDedicatedLogVolume, and SupportedNetworkTypes. The `SupportedNetworkTypes` list is joined to a comma-separated string for display.
+
+**Supported filter options and their JMESPath expressions**:
+
+| Filter | JMESPath expression |
+|---|---|
+| Storage type: gp2 | `StorageType == \`gp2\`` |
+| Storage type: gp3 | `StorageType == \`gp3\`` |
+| Storage type: io1 | `StorageType == \`io1\`` |
+| Storage type: io2 | `StorageType == \`io2\`` |
+| Storage type: Magnetic | `StorageType == \`standard\`` |
+| MultiAZ | `MultiAZCapable == \`true\`` |
+| MultiAZ Clusters | `SupportsClusters == \`true\`` |
+| Performance Insights | `SupportsPerformanceInsights == \`true\`` |
+| Enhanced Monitoring | `SupportsEnhancedMonitoring == \`true\`` |
+| Storage Encryption | `SupportsStorageEncryption == \`true\`` |
+| IAM Authentication | `SupportsIAMDatabaseAuthentication == \`true\`` |
+| Kerberos Authentication | `SupportsKerberosAuthentication == \`true\`` |
+| Global Databases | `SupportsGlobalDatabases == \`true\`` |
+| Dedicated Log Volume | `SupportsDedicatedLogVolume == \`true\`` |
+| IPv6 / Dual-Stack | `contains(SupportedNetworkTypes, \`DUAL\`)` |
+| Babelfish | `SupportsBabelfish == \`true\`` |
+| Storage Autoscaling | `SupportsStorageAutoscaling == \`true\`` |
+| Outpost Capable | `OutpostCapable == \`true\`` |
 

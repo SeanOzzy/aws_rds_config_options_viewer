@@ -16,6 +16,9 @@ The AWS RDS Configuration Options Viewer is a Python-based GUI tool designed to 
 - **Export to CSV**: Conveniently export the fetched configuration details to a CSV file for further analysis.
 - **Clear Cache**: Ability to clear cache for the selected region with just a click.
 - **GUI Interface**: A user-friendly GUI to simplify interactions.
+- **Storage Type Filters**: Filter by gp2, gp3, io1, io2 (Block Express), or Magnetic storage — storage types are mutually exclusive checkboxes.
+- **Feature Filters**: Filter by MultiAZ, MultiAZ Clusters, Performance Insights, Enhanced Monitoring, Storage Encryption, IAM Authentication, Kerberos Authentication, Global Databases, Dedicated Log Volume, IPv6/Dual-Stack Networking, Babelfish (Aurora PostgreSQL), Storage Autoscaling, and AWS Outposts capability.
+- **Rich Results**: Results include storage size range (min/max GiB), max IOPS, max throughput (MiB/s), Dedicated Log Volume support, and supported network types.
 
 #### Example main application screenshot
 ![Main application on Windows](examples/screenshots/main_application_ss_v1.PNG)
@@ -38,7 +41,7 @@ https://github.com/SeanOzzy/aws_rds_config_options_viewer/assets/114792501/8fd96
 
 3. **Explore Configuration Options**: After selecting a region, explore the various RDS configuration options available for that region.
 
-4. **Verify the Valid Combinations**: Select the DB engine and DB instance type (required) and optionally the engine version or one or more of the checkboxes and click "Execute", if your selections are supported a list will be populated, if no data is returned the selected options are not supported.
+4. **Verify the Valid Combinations**: Select the DB engine and DB instance type (required) and optionally the engine version or one or more of the checkboxes and click "Execute", if your selections are supported a list will be populated, if no data is returned the selected options are not supported. Results include storage size range, IOPS limits, throughput limits, Dedicated Log Volume support, and supported network types.
 
 5. **Export Data**: Click the "Save to CSV" button to export the displayed data to a CSV file.
 
@@ -57,12 +60,22 @@ https://github.com/SeanOzzy/aws_rds_config_options_viewer/assets/114792501/8fd96
 1. Clone the repository or download and unpack the zip package.
 2. Navigate to the root directory of the application.
 3. Configure a Python virtual environment to keep the required packages from cluttering your system.
+    - **Ubuntu / Debian Linux**
+    Ubuntu ships Python without tkinter — install it first, then create a venv:
+    ```bash
+    sudo apt update
+    sudo apt install python3-tk python3-venv
+    python3 -m venv /path/to/new/virtual/aws_rds_config_options_viewer
+    source /path/to/new/virtual/aws_rds_config_options_viewer/bin/activate
+    ```
+    A desktop environment (GNOME, KDE, XFCE, etc.) is required; the application cannot run headlessly.
+
     - **macOS**
     For macOS you need to install tkinter with Tcl/Tk via ```brew install python-tk@3.10```, see [Idle and tkinter on macOS](https://www.python.org/download/mac/tcltk/).
     ```bash
     pip install virtualenv
     python -m venv /path/to/new/virtual/aws_rds_config_options_viewer
-    /path/to/aws_rds_config_options_viewer/bin activate
+    source /path/to/aws_rds_config_options_viewer/bin/activate
     ```
 
     - **Windows**
@@ -108,6 +121,32 @@ Amazon Web Services do not endorse, warrant or accept any liability for using th
 
 ## Acknowledgements
 This application depends on the AWS Boto3 API's [describe_db_engine_versions](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/describe_db_engine_versions.html) and [describe_orderable_db_instance_options](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/describe_orderable_db_instance_options.html).
+
+### New filter options and their API fields
+
+| Checkbox | API field | Notes |
+|---|---|---|
+| Provisioned IOPS Storage (io2) | `StorageType == io2` | Block Express — higher IOPS/GiB and 99.999% durability |
+| Dedicated Log Volume | `SupportsDedicatedLogVolume` | Isolates the DB transaction log on a separate volume (available since late 2023) |
+| IPv6 / Dual-Stack Network | `SupportedNetworkTypes` contains `DUAL` | Instances that support both IPv4 and IPv6 in the same VPC |
+| Babelfish (Aurora PostgreSQL) | `SupportsBabelfish` | Aurora PostgreSQL clusters that accept SQL Server wire-protocol connections |
+| Storage Autoscaling | `SupportsStorageAutoscaling` | Automatically expands storage when free space falls below threshold |
+| AWS Outpost Capable | `OutpostCapable` | Instances deployable on AWS Outposts (on-premises AWS hardware) |
+
+### Result columns
+
+| Column | Description |
+|---|---|
+| Engine | RDS engine name (e.g. `aurora-postgresql`) |
+| EngineVersion | Engine version string |
+| DBInstanceClass | Full instance class (e.g. `db.r7g.large`) |
+| StorageType | Storage type: `gp2`, `gp3`, `io1`, `io2`, or `standard` |
+| MaxIopsPerDbInstance | Maximum provisioned IOPS for this combination |
+| MinStorageSize (GiB) | Minimum allocatable storage size |
+| MaxStorageSize (GiB) | Maximum allocatable storage size |
+| MaxStorageThroughput (MiB/s) | Maximum storage throughput (relevant for gp3 and io2) |
+| DedicatedLogVolume | Whether a Dedicated Log Volume is supported |
+| NetworkTypes | Supported network types (`IPV4`, `IPV4, DUAL`) |
 
 ## FAQ
 1.  I see security token invalid errors.

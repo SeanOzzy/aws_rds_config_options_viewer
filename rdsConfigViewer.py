@@ -7,7 +7,7 @@ from config.constants import AWS_TEST_REGION, required_packages_list
 from config import rds_endpoints
 from utils.logger import logger
 import os
-import pkg_resources
+import importlib.metadata
 
 # Start the region selection window, we need the region the user selects to initialize the main window
 region_selection_root = tk.Tk()
@@ -31,11 +31,14 @@ def requirement_precheck():
         raise EnvironmentError(f"Failed to access AWS API. Ensure you have valid credentials. Error: {e}")
     
     # Check Python package requirements
-    required_packages = [pkg for pkg in required_packages_list]  # Add any other required packages here
-    installed_packages = [pkg.key for pkg in pkg_resources.working_set]
-    
-    missing_packages = [pkg for pkg in required_packages if pkg not in installed_packages]
-    
+    required_packages = [pkg for pkg in required_packages_list]
+    missing_packages = []
+    for pkg in required_packages:
+        try:
+            importlib.metadata.distribution(pkg)
+        except importlib.metadata.PackageNotFoundError:
+            missing_packages.append(pkg)
+
     if missing_packages:
         logger.critical(f"Missing required Python packages: {', '.join(missing_packages)}")
         raise ImportError(f"Missing required Python packages: {', '.join(missing_packages)}")

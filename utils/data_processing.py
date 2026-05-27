@@ -45,11 +45,23 @@ def construct_jmespath_query(checkbox_states, engine, db_instance_class, db_engi
         query_parts.append('StorageType == `io1`')
     if checkbox_states['magnetic_storage']:
         query_parts.append('StorageType == `standard`')
-    
+    if checkbox_states['io2_storage']:
+        query_parts.append('StorageType == `io2`')
+    if checkbox_states['supports_dedicated_log_volume']:
+        query_parts.append('SupportsDedicatedLogVolume == `true`')
+    if checkbox_states['supports_babelfish']:
+        query_parts.append('SupportsBabelfish == `true`')
+    if checkbox_states['supports_ipv6']:
+        query_parts.append("contains(SupportedNetworkTypes, `DUAL`)")
+    if checkbox_states['supports_storage_autoscaling']:
+        query_parts.append('SupportsStorageAutoscaling == `true`')
+    if checkbox_states['outpost_capable']:
+        query_parts.append('OutpostCapable == `true`')
+
     # print(f"DEBUG: query_parts after construction: {query_parts}")
 
     query = 'OrderableDBInstanceOptions[?{}]'.format(' && '.join(query_parts)) if query_parts else 'OrderableDBInstanceOptions[]'
-    
+
     # Use the logger to write some information to the log file
     logger.info(f"Executing API call with the following options:")
     logger.info(f"Region: {os.environ.get('RDS_REGION')}")
@@ -68,7 +80,13 @@ def construct_jmespath_query(checkbox_states, engine, db_instance_class, db_engi
     logger.info(f"GP2 Storage: {kwargs['gp2_storage_var'].get()}")
     logger.info(f"GP3 Storage: {kwargs['gp3_storage_var'].get()}")
     logger.info(f"IO1 Storage: {kwargs['io1_storage_var'].get()}")
+    logger.info(f"IO2 Storage: {kwargs['io2_storage_var'].get()}")
     logger.info(f"Magnetic Storage: {kwargs['magnetic_storage_var'].get()}")
+    logger.info(f"SupportsDedicatedLogVolume: {kwargs['supports_dedicated_log_volume_var'].get()}")
+    logger.info(f"SupportsBabelfish: {kwargs['supports_babelfish_var'].get()}")
+    logger.info(f"IPv6/Dual-Stack: {kwargs['supports_ipv6_var'].get()}")
+    logger.info(f"SupportsStorageAutoscaling: {kwargs['supports_storage_autoscaling_var'].get()}")
+    logger.info(f"OutpostCapable: {kwargs['outpost_capable_var'].get()}")
     logger.debug(f"JMESPath query: {query} \n")
 
     # Print some console information, this isn't necessary but it's useful for debugging
@@ -95,14 +113,20 @@ def process_api_response(response, query):
     filtered_options = jmespath.search(query, response)
     api_results = []
     for option in filtered_options:
+        # SupportedNetworkTypes is a list (e.g. ["IPV4", "DUAL"]); join for display
+        network_types = option.get("SupportedNetworkTypes", [])
+        network_types_str = ", ".join(network_types) if network_types else ""
         row_data = [
             option.get("Engine", ""),
             option.get("EngineVersion", ""),
             option.get("DBInstanceClass", ""),
             option.get("StorageType", ""),
-            option.get("MaxIopsPerDbInstance", ""), 
+            option.get("MaxIopsPerDbInstance", ""),
+            option.get("MinStorageSize", ""),
             option.get("MaxStorageSize", ""),
             option.get("MaxStorageThroughputPerDbInstance", ""),
+            option.get("SupportsDedicatedLogVolume", ""),
+            network_types_str,
         ]
         api_results.append(row_data)
     return api_results
@@ -155,6 +179,12 @@ def fetch_and_display(engine_entry, db_instance_class, result_tree, db_engine_ve
         'gp3_storage': kwargs['gp3_storage_var'].get(),
         'io1_storage': kwargs['io1_storage_var'].get(),
         'magnetic_storage': kwargs['magnetic_storage_var'].get(),
+        'io2_storage': kwargs['io2_storage_var'].get(),
+        'supports_dedicated_log_volume': kwargs['supports_dedicated_log_volume_var'].get(),
+        'supports_babelfish': kwargs['supports_babelfish_var'].get(),
+        'supports_ipv6': kwargs['supports_ipv6_var'].get(),
+        'supports_storage_autoscaling': kwargs['supports_storage_autoscaling_var'].get(),
+        'outpost_capable': kwargs['outpost_capable_var'].get(),
     }
     query = construct_jmespath_query(checkbox_states, engine, db_instance_class, db_engine_version_entry, **kwargs)
     
@@ -171,7 +201,7 @@ def save_to_csv():
         if file_path:
             with open(file_path, 'w', newline='') as file:
                 writer = csv.writer(file)
-                writer.writerow(["Engine", "EngineVersion", "DBInstanceClass", "StorageType", "MaxIopsPerDbInstance", "MaxStorageSize", "MaxStorageThroughputPerDbInstance"])
+                writer.writerow(["Engine", "EngineVersion", "DBInstanceClass", "StorageType", "MaxIopsPerDbInstance", "MinStorageSize", "MaxStorageSize", "MaxStorageThroughputPerDbInstance", "SupportsDedicatedLogVolume", "SupportedNetworkTypes"])
                 writer.writerows(api_results)
     except Exception as e:
         # Write to logger

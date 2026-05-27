@@ -138,7 +138,13 @@ def initialize_gui(fetch_and_display_func):
     gp3_storage_var = tk.IntVar(value=0)
     io1_storage_var = tk.IntVar(value=0)
     magnetic_storage_var = tk.IntVar(value=0)
-    # ... (repeat the above lines for additional checkboxes)
+    # New feature flags
+    io2_storage_var = tk.IntVar(value=0)
+    supports_dedicated_log_volume_var = tk.IntVar(value=0)
+    supports_babelfish_var = tk.IntVar(value=0)
+    supports_ipv6_var = tk.IntVar(value=0)
+    supports_storage_autoscaling_var = tk.IntVar(value=0)
+    outpost_capable_var = tk.IntVar(value=0)
 
 # Associate the IntVar variables with the checkboxes and set commands to print variable values on click
     multi_az_checkbox = tk.Checkbutton(main_window, text="RDS Multi-AZ", variable=multi_az_var, onvalue=1, offvalue=0, 
@@ -189,85 +195,135 @@ def initialize_gui(fetch_and_display_func):
     # The format is command=lambda: function_name(variable_name, widget_name)
     # Where variable_name is the IntVar variable associated with the checkbox and widget_name is the selected checkbox widget
     # Any susequent arguments are the other checkboxes that need to be disabled when the selected checkbox is enabled
-    gp2_checkbox = tk.Checkbutton(main_window, text="General Purpose Storage (gp2)", variable=gp2_storage_var, 
-                                  command=lambda: toggle_checkboxes(gp2_storage_var, gp2_checkbox, gp3_checkbox, io1_checkbox, magnetic_checkbox))
+    # Storage type checkboxes are mutually exclusive; each disables the others when selected.
+    # io2_checkbox is defined after these but referenced via late-binding closures — safe at call time.
+    gp2_checkbox = tk.Checkbutton(main_window, text="General Purpose Storage (gp2)", variable=gp2_storage_var,
+                                  command=lambda: toggle_checkboxes(gp2_storage_var, gp2_checkbox, gp3_checkbox, io1_checkbox, magnetic_checkbox, io2_checkbox))
     gp2_checkbox.grid(column=0, row=10, columnspan=3, padx=10, pady=10)
     gp2_checkbox.grid_columnconfigure(1, weight=1)
     gp2_checkbox.grid_rowconfigure(1, weight=1)
 
-    gp3_checkbox = tk.Checkbutton(main_window, text="General Purpose Storage (gp3)", variable=gp3_storage_var, 
-                                  command=lambda: toggle_checkboxes(gp3_storage_var, gp3_checkbox, gp2_checkbox, io1_checkbox, magnetic_checkbox))
+    gp3_checkbox = tk.Checkbutton(main_window, text="General Purpose Storage (gp3)", variable=gp3_storage_var,
+                                  command=lambda: toggle_checkboxes(gp3_storage_var, gp3_checkbox, gp2_checkbox, io1_checkbox, magnetic_checkbox, io2_checkbox))
     gp3_checkbox.grid(column=1, row=10, columnspan=3, padx=10, pady=10)
     gp3_checkbox.grid_columnconfigure(1, weight=1)
     gp3_checkbox.grid_rowconfigure(1, weight=1)
 
-    io1_checkbox = tk.Checkbutton(main_window, text="Provisioned IOPS Storage (io1)", variable=io1_storage_var, 
-                                  command=lambda: toggle_checkboxes(io1_storage_var, io1_checkbox, gp2_checkbox, gp3_checkbox, magnetic_checkbox))
+    io1_checkbox = tk.Checkbutton(main_window, text="Provisioned IOPS Storage (io1)", variable=io1_storage_var,
+                                  command=lambda: toggle_checkboxes(io1_storage_var, io1_checkbox, gp2_checkbox, gp3_checkbox, magnetic_checkbox, io2_checkbox))
     io1_checkbox.grid(column=0, row=11, columnspan=3, padx=10, pady=10)
     io1_checkbox.grid_columnconfigure(1, weight=1)
     io1_checkbox.grid_rowconfigure(1, weight=1)
 
-    magnetic_checkbox = tk.Checkbutton(main_window, text="Magnetic Storage (deprecated)", variable=magnetic_storage_var, 
-                                       command=lambda: toggle_checkboxes(magnetic_storage_var, magnetic_checkbox, gp2_checkbox, gp3_checkbox, io1_checkbox))
+    magnetic_checkbox = tk.Checkbutton(main_window, text="Magnetic Storage (deprecated)", variable=magnetic_storage_var,
+                                       command=lambda: toggle_checkboxes(magnetic_storage_var, magnetic_checkbox, gp2_checkbox, gp3_checkbox, io1_checkbox, io2_checkbox))
     magnetic_checkbox.grid(column=1, row=11, columnspan=3, padx=10, pady=10)
     magnetic_checkbox.grid_columnconfigure(1, weight=1)
     magnetic_checkbox.grid_rowconfigure(1, weight=1)
 
+    # io2 is mutually exclusive with all other storage types (Block Express — higher durability / IOPS)
+    io2_checkbox = tk.Checkbutton(main_window, text="Provisioned IOPS Storage (io2)", variable=io2_storage_var,
+                                  command=lambda: toggle_checkboxes(io2_storage_var, io2_checkbox, gp2_checkbox, gp3_checkbox, io1_checkbox, magnetic_checkbox))
+    io2_checkbox.grid(column=0, row=12, columnspan=3, padx=10, pady=10)
+    io2_checkbox.grid_columnconfigure(1, weight=1)
+    io2_checkbox.grid_rowconfigure(1, weight=1)
+
+    # Dedicated Log Volume — isolates the database log on a separate storage volume (announced 2023)
+    dedicated_log_volume_checkbox = tk.Checkbutton(main_window, text="Dedicated Log Volume", variable=supports_dedicated_log_volume_var, command=None)
+    dedicated_log_volume_checkbox.grid(column=1, row=12, columnspan=3, padx=10, pady=10)
+    dedicated_log_volume_checkbox.grid_columnconfigure(1, weight=1)
+    dedicated_log_volume_checkbox.grid_rowconfigure(1, weight=1)
+
+    # IPv6 / Dual-Stack network type — filters for instances that support dual-stack (IPv4 + IPv6) networking
+    ipv6_checkbox = tk.Checkbutton(main_window, text="IPv6 / Dual-Stack Network", variable=supports_ipv6_var, command=None)
+    ipv6_checkbox.grid(column=0, row=13, columnspan=3, padx=10, pady=10)
+    ipv6_checkbox.grid_columnconfigure(1, weight=1)
+    ipv6_checkbox.grid_rowconfigure(1, weight=1)
+
+    # Babelfish — Aurora PostgreSQL only; provides SQL Server wire-protocol compatibility
+    babelfish_checkbox = tk.Checkbutton(main_window, text="Babelfish (Aurora PostgreSQL)", variable=supports_babelfish_var, command=None)
+    babelfish_checkbox.grid(column=1, row=13, columnspan=3, padx=10, pady=10)
+    babelfish_checkbox.grid_columnconfigure(1, weight=1)
+    babelfish_checkbox.grid_rowconfigure(1, weight=1)
+
+    # Storage Autoscaling — automatically expands storage when free space runs low
+    storage_autoscaling_checkbox = tk.Checkbutton(main_window, text="Storage Autoscaling", variable=supports_storage_autoscaling_var, command=None)
+    storage_autoscaling_checkbox.grid(column=0, row=14, columnspan=3, padx=10, pady=10)
+    storage_autoscaling_checkbox.grid_columnconfigure(1, weight=1)
+    storage_autoscaling_checkbox.grid_rowconfigure(1, weight=1)
+
+    # Outpost Capable — instances that can run on AWS Outposts (on-premises AWS hardware)
+    outpost_capable_checkbox = tk.Checkbutton(main_window, text="AWS Outpost Capable", variable=outpost_capable_var, command=None)
+    outpost_capable_checkbox.grid(column=1, row=14, columnspan=3, padx=10, pady=10)
+    outpost_capable_checkbox.grid_columnconfigure(1, weight=1)
+    outpost_capable_checkbox.grid_rowconfigure(1, weight=1)
+
 
 # Create a button to fetch and display data
     fetch_button = tk.Button(
-        main_window, 
-        text="Execute", 
+        main_window,
+        text="Execute",
         command=lambda: fetch_and_display_func(
-            engine_entry, 
+            engine_entry,
             # We need to join the DB instance class and type together to get the full name of the DB instance class.
             # db.serverless is a special case since this class does not have a type, so we hack this in the fetch_and_display() in data_processing.py
-            db_instance_class_entry.get() + "." + db_instance_type_entry.get(), 
+            db_instance_class_entry.get() + "." + db_instance_type_entry.get(),
             result_tree,
             db_engine_version_entry,
-            multi_az_var = multi_az_var,
-            supports_clusters_var = supports_clusters_var,
-            supports_performance_insights_var = supports_performance_insights_var,
-            supports_enhanced_monitoring_var = supports_enhanced_monitoring_var,
-            storage_encyption_var = storage_encyption_var,
-            iam_authentication_var = iam_authentication_var,
-            kerberos_authentication_var = kerberos_authentication_var,
-            global_database_var= global_database_var,
-            gp2_storage_var = gp2_storage_var,
-            gp3_storage_var = gp3_storage_var,
-            io1_storage_var = io1_storage_var,
-            magnetic_storage_var = magnetic_storage_var,
-            )  # add other needed elements
+            multi_az_var=multi_az_var,
+            supports_clusters_var=supports_clusters_var,
+            supports_performance_insights_var=supports_performance_insights_var,
+            supports_enhanced_monitoring_var=supports_enhanced_monitoring_var,
+            storage_encyption_var=storage_encyption_var,
+            iam_authentication_var=iam_authentication_var,
+            kerberos_authentication_var=kerberos_authentication_var,
+            global_database_var=global_database_var,
+            gp2_storage_var=gp2_storage_var,
+            gp3_storage_var=gp3_storage_var,
+            io1_storage_var=io1_storage_var,
+            magnetic_storage_var=magnetic_storage_var,
+            io2_storage_var=io2_storage_var,
+            supports_dedicated_log_volume_var=supports_dedicated_log_volume_var,
+            supports_babelfish_var=supports_babelfish_var,
+            supports_ipv6_var=supports_ipv6_var,
+            supports_storage_autoscaling_var=supports_storage_autoscaling_var,
+            outpost_capable_var=outpost_capable_var,
+        )
     )
-    fetch_button.grid(column=0, row=12, columnspan=3, padx=1, pady=1)
+    fetch_button.grid(column=0, row=15, columnspan=3, padx=1, pady=1)
     fetch_button.grid_columnconfigure(1, weight=1)
     fetch_button.grid_rowconfigure(1, weight=1)
-    
 
     # Create a button to save the results to a CSV file
     save_csv_button = tk.Button(main_window, text="Save to CSV", command=data_processing.save_to_csv)
-    save_csv_button.grid(column=1, row=12, columnspan=3, padx=1, pady=1)
+    save_csv_button.grid(column=1, row=15, columnspan=3, padx=1, pady=1)
     save_csv_button.grid_columnconfigure(1, weight=1)
     save_csv_button.grid_rowconfigure(1, weight=1)
 
     # Create a button to clear the cache, clearing the cache will force the application to fetch the latest data from the API which takes 2-4 mins
     clear_cache_button = tk.Button(main_window, text="Clear Cache", command=cache.clear_existing_cache)
-    clear_cache_button.grid(column=1, row=13, columnspan=3, padx=1, pady=1)
+    clear_cache_button.grid(column=1, row=16, columnspan=3, padx=1, pady=1)
     clear_cache_button.grid_columnconfigure(1, weight=1)
     clear_cache_button.grid_rowconfigure(1, weight=1)
 
     # Create a Treeview to display the results within the GUI
     result_tree = ttk.Treeview(main_window, columns=(
-        "Engine", "EngineVersion", "DBInstanceClass", "StorageType", "MaxIopsPerDbInstance", "MaxStorageSize", "MaxStorageThroughputPerDbInstance"), show="headings")
+        "Engine", "EngineVersion", "DBInstanceClass", "StorageType",
+        "MaxIopsPerDbInstance", "MinStorageSize", "MaxStorageSize",
+        "MaxStorageThroughputPerDbInstance", "SupportsDedicatedLogVolume",
+        "SupportedNetworkTypes"), show="headings")
     result_tree.heading("Engine", text="Engine")
     result_tree.heading("EngineVersion", text="EngineVersion")
     result_tree.heading("DBInstanceClass", text="DBInstanceClass")
     result_tree.heading("StorageType", text="StorageType")
     result_tree.heading("MaxIopsPerDbInstance", text="MaxIopsPerDbInstance")
-    result_tree.heading("MaxStorageSize", text="MaxStorageSize")
-    result_tree.heading("MaxStorageThroughputPerDbInstance", text="MaxStorageThroughputPerDbInstance")
+    result_tree.heading("MinStorageSize", text="MinStorageSize (GiB)")
+    result_tree.heading("MaxStorageSize", text="MaxStorageSize (GiB)")
+    result_tree.heading("MaxStorageThroughputPerDbInstance", text="MaxStorageThroughput (MiB/s)")
+    result_tree.heading("SupportsDedicatedLogVolume", text="DedicatedLogVolume")
+    result_tree.heading("SupportedNetworkTypes", text="NetworkTypes")
     # If required add more headings here, remember to update header information in the save_to_csv() function if you add more columns
-    result_tree.grid(column=0, row=15, columnspan=3, padx=1, pady=1)
+    result_tree.grid(column=0, row=18, columnspan=3, padx=1, pady=1)
     result_tree.grid_columnconfigure(1, weight=1)
     result_tree.grid_rowconfigure(1, weight=1)
 
